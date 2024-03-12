@@ -210,9 +210,7 @@ GameObject:
   - component: {fileID: 3352710946045066405}
   - component: {fileID: 2494241007814607803}
   - component: {fileID: 5788895788545959415}
-  - component: {fileID: -2620999037253250061}
   - component: {fileID: 4602490760062552238}
-  - component: {fileID: 9223355099723426983}
   - component: {fileID: 3801278518886067380}
   - component: {fileID: 6279424531608927058}
   m_Layer: 0
@@ -324,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3449229920
+  GlobalObjectIdHash: 1916491498
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -333,20 +331,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-2620999037253250061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6158926679419567595}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6257c45b65d493e4a9dabb72ec2d845d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Position:
-    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!114 &4602490760062552238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +338,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6158926679419567595}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
@@ -378,19 +362,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &9223355099723426983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6158926679419567595}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15700874d16a1bb48965832af6991e28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  theta: 0
 --- !u!114 &3801278518886067380
 MonoBehaviour:
   m_ObjectHideFlags: 0

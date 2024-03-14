@@ -8,10 +8,11 @@ public class PlayerShoot : MonoBehaviour
     public GameObject Gun;
     [SerializeField]
     private int ammo;
+
     [SerializeField]
     private GameObject bullet;
-    [SerializeField]
-    public float bulletForce;
+    public Transform bulletSpawn;
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -25,7 +26,8 @@ public class PlayerShoot : MonoBehaviour
     public void Fire()
     {
 
-        Instantiate(bullet, Gun.transform.position, Quaternion.identity);
+        Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
+        ammo = ammo - 1;
 
     }
 }

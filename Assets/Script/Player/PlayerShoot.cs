@@ -21,7 +21,7 @@ public class PlayerShoot : NetworkBehaviour
         {
             if(ammo > 0)
             {
-                RequestFireServerRpc();
+                RequestFireServerRpc(); //sends a request to the server too spawn in the projectile so that others can see the projectiles
                 Fire();
             }
         }
@@ -36,7 +36,7 @@ public class PlayerShoot : NetworkBehaviour
     [ClientRpc]
     void FireClientRpc() //this is client side as it is the player telling the server that a bullet has been fired from this owner, it will then spawn the proj in on each game saving sending over more data
     {
-        if (!IsOwner)
+        if (!IsOwner) //since i shoot locally in update this removes the feel of delay after shot
         {
             Fire();
         }

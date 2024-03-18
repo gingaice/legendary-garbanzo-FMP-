@@ -148,4 +148,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletRigid: {fileID: 6035995922827126438}
   bulletSpeed: 5000
-  despawnTime: 60
+  despawnTime: 5

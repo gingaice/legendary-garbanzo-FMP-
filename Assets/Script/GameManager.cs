@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,13 +7,15 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public event EventHandler OnLocalPlayerReadyChanged;
+
     private enum State
     {
         waitingToStart,
         GamePlaying,
     }
 
-    private State state;
+    private NetworkVariable<State> state = new NetworkVariable<State>(State.waitingToStart);
     private bool isLocalPlayerReady;
     private Dictionary<ulong, bool> PlayerReadyDictionary;
 
@@ -26,30 +29,35 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
-        switch (state)
+        switch (state.Value)
         {
             case State.waitingToStart:
                 if (isLocalPlayerReady)
                 {
-                    state = State.GamePlaying; 
+                    state.Value = State.GamePlaying; 
                 }
                 break;
             case State.GamePlaying:
                 break;
         }
-    }
-    public bool IsGamePlaying()
-    {
-        return state == State.GamePlaying;
-    }    
-    public bool IsWaitingToStart()
-    {
-        return state == State.waitingToStart;
+
+        readyButtonPressed();
     }
 
-    public bool IsLocalPlayerReady()
+    private void OnButtonAction()
     {
-        return isLocalPlayerReady;
+        if(state.Value == State.waitingToStart)
+        {
+            isLocalPlayerReady = true;
+
+            SetPlayerReadyServerRpc();
+
+            OnLocalPlayerReadyChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+    public void readyButtonPressed()
+    {
+        OnButtonAction();
     }
 
     [ServerRpc(RequireOwnership =false)]
@@ -69,8 +77,20 @@ public class GameManager : NetworkBehaviour
 
         if(allPlayersReady)
         {
-            state = State.GamePlaying;
+            state.Value = State.GamePlaying;
         }
     }
+    public bool IsGamePlaying()
+    {
+        return state.Value == State.GamePlaying;
+    }
+    public bool IsWaitingToStart()
+    {
+        return state.Value == State.waitingToStart;
+    }
 
+    public bool IsLocalPlayerReady()
+    {
+        return isLocalPlayerReady;
+    }
 }

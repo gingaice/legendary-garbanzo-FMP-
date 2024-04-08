@@ -9,6 +9,7 @@ public class GameManager : NetworkBehaviour
 
     public event EventHandler OnLocalPlayerReadyChanged;
 
+    public Material testmat;
     private enum State
     {
         waitingToStart,
@@ -16,14 +17,14 @@ public class GameManager : NetworkBehaviour
     }
 
     private NetworkVariable<State> state = new NetworkVariable<State>(State.waitingToStart);
-    private bool isLocalPlayerReady;
+    private bool isLocalPlayerReady = false;
     private Dictionary<ulong, bool> PlayerReadyDictionary;
 
 
     private void Awake()
     {
         Instance = this;
-
+        testmat.color = Color.gray;
         PlayerReadyDictionary = new Dictionary<ulong, bool>();
     }
 
@@ -38,10 +39,10 @@ public class GameManager : NetworkBehaviour
                 }
                 break;
             case State.GamePlaying:
+                testmat.color = Color.red;
                 break;
         }
 
-        readyButtonPressed();
     }
 
     private void OnButtonAction()
@@ -55,6 +56,7 @@ public class GameManager : NetworkBehaviour
             OnLocalPlayerReadyChanged?.Invoke(this, EventArgs.Empty);
         }
     }
+    [ServerRpc(RequireOwnership = false)]
     public void readyButtonPressed()
     {
         OnButtonAction();

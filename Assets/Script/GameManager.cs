@@ -108,6 +108,8 @@ public class GameManager : NetworkBehaviour
 
             OnLocalPlayerReadyChanged?.Invoke(this, EventArgs.Empty); //this logs that the locla player has clicked the button saying that they are ready to move into the actual game
         }
+
+        
     }
 
     public void readyButtonPressed()

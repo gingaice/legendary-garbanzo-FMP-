@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TestOnline.unity
     guid: 9db4943f9031b2e44a22a98a94443d7f
   - enabled: 1
+    path: Assets/Scenes/TestLobby.unity
+    guid: 58c12885a595c1b4ea910252615e37a9
+  - enabled: 0
     path: Assets/Scenes/OnlineGame.unity
     guid: 4300b9a6fb90d0a4dabb381c53694018
   m_configObjects: {}

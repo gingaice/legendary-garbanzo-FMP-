@@ -1544,9 +1544,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1716436996}
-        m_TargetAssemblyTypeName: GameNetworking, Assembly-CSharp
-        m_MethodName: CreateGame
+      - m_Target: {fileID: 1716437001}
+        m_TargetAssemblyTypeName: LobbyTest, Assembly-CSharp
+        m_MethodName: CreateOrJoinLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1811,9 +1811,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1716436996}
-        m_TargetAssemblyTypeName: GameNetworking, Assembly-CSharp
-        m_MethodName: JoinGame
+      - m_Target: {fileID: 1716437001}
+        m_TargetAssemblyTypeName: LobbyTest, Assembly-CSharp
+        m_MethodName: JoinCodeLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2311,7 +2311,6 @@ GameObject:
   - component: {fileID: 1716436999}
   - component: {fileID: 1716436998}
   - component: {fileID: 1716436997}
-  - component: {fileID: 1716436996}
   - component: {fileID: 1716437001}
   m_Layer: 0
   m_Name: NetworkManager
@@ -2320,21 +2319,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1716436996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716436995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee61ef4a99a073e43b69e86a9feddbea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _joinCodeText: {fileID: 2008065531}
-  _joinInput: {fileID: 653296371}
-  _buttons: {fileID: 428595998}
 --- !u!114 &1716436997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2438,6 +2422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3298ff9693465a7488db46c8f67ffe9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttons: {fileID: 428595998}
+  _joinCodeText: {fileID: 2008065531}
+  _joinInput: {fileID: 653296371}
 --- !u!1 &1725902959
 GameObject:
   m_ObjectHideFlags: 0

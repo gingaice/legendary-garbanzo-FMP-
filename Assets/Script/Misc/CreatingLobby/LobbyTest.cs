@@ -161,6 +161,7 @@ public class LobbyTest : MonoBehaviour
 
             // Send a heartbeat every 15 seconds to keep the room alive
             StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 15)); //after 30 seconds of inactivity it auto closes
+            StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 1.1f)); //after 30 seconds of inactivity it auto closes
 
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
@@ -194,6 +195,7 @@ public class LobbyTest : MonoBehaviour
         while (true)
         {
             Lobbies.Instance.GetLobbyAsync(lobbyId);
+            
             yield return delay;
         }
     }

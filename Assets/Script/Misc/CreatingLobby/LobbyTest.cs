@@ -29,11 +29,21 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private TMP_InputField _joinInput;
     private void Awake() => _transport = FindObjectOfType<UnityTransport>();
 
-    public async void CreateOrJoinLobby()
+    public async void CreateLobbyButton()
     {
         await Authenticate();
 
-        _connectedLobby = await QuickJoinLobby() ?? await CreateLobby();
+        _connectedLobby = await CreateLobby();
+
+
+
+        if (_connectedLobby != null) _buttons.SetActive(false);
+    }
+    public async void QuickJoinLobbyButton()
+    {
+        await Authenticate();
+
+        _connectedLobby = await QuickJoinLobby();
 
 
 
@@ -42,32 +52,34 @@ public class LobbyTest : MonoBehaviour
     public async void JoinCodeLobby()
     {
         await Authenticate(); //i think authenticating throws it off as once the client is made it cant try and rejoin a different one mess around with tomorrow
-        // try using similar too     private async Task<Lobby> QuickJoinLobby() instead of void
+                              // try using similar too     private async Task<Lobby> QuickJoinLobby() instead of void
+        //Debug.Log(_joinInput.text + ":  thisssssssssssssssssssssssssss");
+        _connectedLobby = await JoinLobbyByCode(_joinInput.text);
+
+        if(_connectedLobby != null) _buttons.SetActive(false);
+    }
+
+    private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
+    {
         try
         {
+            //await Lobbies.Instance.JoinLobbyByIdAsync(_joinInput.text);
 
-            var lobby = await Lobbies.Instance.JoinLobbyByIdAsync(_joinInput.text);
+            var lobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode);
 
-
+            //await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
             var a = await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
 
             SetTransformAsClient(a);
 
-
             NetworkManager.Singleton.StartClient();
+            return lobby;
         }
         catch (LobbyServiceException ex)
         {
             Debug.Log(ex);
+            return null;
         }
-
-        //_buttons.SetActive(false);
-
-        //JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(_joinInput.text); //checks that the server is created and like made.
-
-        //_transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
-
-        //NetworkManager.Singleton.StartClient();
     }
 
     private async Task Authenticate()
@@ -111,26 +123,27 @@ public class LobbyTest : MonoBehaviour
     {
         try
         {
-            const int maxPlayers = 100;
+            const int maxPlayers = 5;
 
             // Create a relay allocation and generate a join code to share with the lobby
             var a = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
-            var joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
+            var joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId); //creates relay join code
 
             // Create a lobby, adding the relay join code to the lobby data
             var options = new CreateLobbyOptions
             {
-                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } }
+                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } } //join code should be added into lobby data
             };
             var lobby = await Lobbies.Instance.CreateLobbyAsync("Useless Lobby Name", maxPlayers, options);
-            _joinCodeText.text = joinCode;
-            // Send a heartbeat every 15 seconds to keep the room alive
-            StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 15));
 
-            // Set the game room to use the relay allocation
+            //_joinCodeText.text = joinCode;
+            _joinCodeText.text = lobby.LobbyCode; //lobby.lobbycode it to connect to a pre existing lobby
+
+            // Send a heartbeat every 15 seconds to keep the room alive
+            StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 15)); //after 30 seconds of inactivity it auto closes
+
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
-            // Start the room. I'm doing this immediately, but maybe you want to wait for the lobby to fill up
             NetworkManager.Singleton.StartHost();
             return lobby;
         }

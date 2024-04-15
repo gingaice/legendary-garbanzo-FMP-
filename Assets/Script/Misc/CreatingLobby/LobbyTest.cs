@@ -31,6 +31,7 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private Toggle _privGame;
     private void Awake() => _transport = FindObjectOfType<UnityTransport>();
 
+    #region buttons
     public async void CreateLobbyButton()
     {
         await Authenticate();
@@ -46,6 +47,13 @@ public class LobbyTest : MonoBehaviour
         _connectedLobby = await QuickJoinLobby();
 
         if (_connectedLobby != null) _buttons.SetActive(false);
+    }    
+    
+    public async void LeaveLobbyButton()
+    {
+        if(_connectedLobby != null) _connectedLobby = await LeaveLobby();
+
+        if (_connectedLobby == null) _buttons.SetActive(true);
     }
     public async void JoinCodeLobby()
     {
@@ -56,6 +64,8 @@ public class LobbyTest : MonoBehaviour
         if(_connectedLobby != null) _buttons.SetActive(false);
     }
 
+
+#endregion
     private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
     {
         try
@@ -126,12 +136,12 @@ public class LobbyTest : MonoBehaviour
             var a = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId); //creates relay join code
 
-            DataObject.VisibilityOptions t = (_privGame.isOn ? DataObject.VisibilityOptions.Public : DataObject.VisibilityOptions.Public) ;
+            //DataObject.VisibilityOptions t = (_privGame.isOn ? DataObject.VisibilityOptions.Public : DataObject.VisibilityOptions.Public) ; for changing the enetire lobby into only host allowed in to see
 
                 // Create a lobby, adding the relay join code to the lobby data
             var options = new CreateLobbyOptions
             {
-                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(t, joinCode) } } //join code should be added into lobby data
+                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } } //join code should be added into lobby data
             };
 
             if (_privGame.isOn)
@@ -176,6 +186,31 @@ public class LobbyTest : MonoBehaviour
         {
             Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
             yield return delay;
+        }
+    }
+    private IEnumerator LobbyPollCoroutine(string lobbyId, float waitTimeSeconds)
+    {
+        var delay = new WaitForSecondsRealtime(waitTimeSeconds);
+        while (true)
+        {
+            Lobbies.Instance.GetLobbyAsync(lobbyId);
+            yield return delay;
+        }
+    }
+
+    private async Task<Lobby> LeaveLobby()
+    {
+        try
+        {
+            if(_connectedLobby.HostId == AuthenticationService.Instance.PlayerId) await Lobbies.Instance.DeleteLobbyAsync(_connectedLobby.Id);
+            else await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, AuthenticationService.Instance.PlayerId);
+            _connectedLobby = null;
+            return _connectedLobby;
+        }
+        catch(LobbyServiceException ex) 
+        { 
+            Debug.LogException(ex);
+            return null;
         }
     }
 

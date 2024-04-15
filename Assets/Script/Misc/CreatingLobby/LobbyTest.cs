@@ -13,6 +13,7 @@ using Unity.Services.Relay.Models;
 using Unity.Services.Relay;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 
 public class LobbyTest : MonoBehaviour
@@ -27,6 +28,7 @@ public class LobbyTest : MonoBehaviour
 
     [SerializeField] private TMP_Text _joinCodeText;
     [SerializeField] private TMP_InputField _joinInput;
+    [SerializeField] private Toggle _privGame;
     private void Awake() => _transport = FindObjectOfType<UnityTransport>();
 
     public async void CreateLobbyButton()
@@ -51,9 +53,8 @@ public class LobbyTest : MonoBehaviour
     }
     public async void JoinCodeLobby()
     {
-        await Authenticate(); //i think authenticating throws it off as once the client is made it cant try and rejoin a different one mess around with tomorrow
-                              // try using similar too     private async Task<Lobby> QuickJoinLobby() instead of void
-        //Debug.Log(_joinInput.text + ":  thisssssssssssssssssssssssssss");
+        await Authenticate(); 
+
         _connectedLobby = await JoinLobbyByCode(_joinInput.text);
 
         if(_connectedLobby != null) _buttons.SetActive(false);
@@ -134,6 +135,16 @@ public class LobbyTest : MonoBehaviour
             {
                 Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } } //join code should be added into lobby data
             };
+
+            if (_privGame.isOn)
+            {
+                options.IsPrivate = true;
+            }
+            else
+            {
+                options.IsPrivate = false;
+            }
+
             var lobby = await Lobbies.Instance.CreateLobbyAsync("Useless Lobby Name", maxPlayers, options);
 
             //_joinCodeText.text = joinCode;

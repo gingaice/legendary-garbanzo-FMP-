@@ -37,8 +37,6 @@ public class LobbyTest : MonoBehaviour
 
         _connectedLobby = await CreateLobby();
 
-
-
         if (_connectedLobby != null) _buttons.SetActive(false);
     }
     public async void QuickJoinLobbyButton()
@@ -46,8 +44,6 @@ public class LobbyTest : MonoBehaviour
         await Authenticate();
 
         _connectedLobby = await QuickJoinLobby();
-
-
 
         if (_connectedLobby != null) _buttons.SetActive(false);
     }
@@ -130,15 +126,18 @@ public class LobbyTest : MonoBehaviour
             var a = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId); //creates relay join code
 
-            // Create a lobby, adding the relay join code to the lobby data
+            DataObject.VisibilityOptions t = (_privGame.isOn ? DataObject.VisibilityOptions.Public : DataObject.VisibilityOptions.Public) ;
+
+                // Create a lobby, adding the relay join code to the lobby data
             var options = new CreateLobbyOptions
             {
-                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } } //join code should be added into lobby data
+                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(t, joinCode) } } //join code should be added into lobby data
             };
 
             if (_privGame.isOn)
             {
                 options.IsPrivate = true;
+
             }
             else
             {

@@ -2876,7 +2876,7 @@ MonoBehaviour:
   _buttons: {fileID: 428595998}
   _joinCodeText: {fileID: 2008065531}
   _joinInput: {fileID: 653296371}
-  _privGame: {fileID: 0}
+  _privGame: {fileID: 1318500248}
 --- !u!1 &1725902959
 GameObject:
   m_ObjectHideFlags: 0

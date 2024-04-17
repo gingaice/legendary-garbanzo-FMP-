@@ -67,12 +67,7 @@ public class LobbyTest : MonoBehaviour
         if(_connectedLobby != null) _buttons.SetActive(false);
     }
 
-
-    #endregion
-
-
-
-        private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
+    private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
     {
         try
         {
@@ -95,6 +90,8 @@ public class LobbyTest : MonoBehaviour
         }
     }
 
+
+    #endregion
     private async Task Authenticate()
     {
         var options = new InitializationOptions();
@@ -131,7 +128,6 @@ public class LobbyTest : MonoBehaviour
         }
     }    
     
-
     private async Task<Lobby> CreateLobby()
     {
         try

@@ -29,12 +29,16 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private TMP_Text _joinCodeText;
     [SerializeField] private TMP_InputField _joinInput;
     [SerializeField] private Toggle _privGame;
-    private void Awake() => _transport = FindObjectOfType<UnityTransport>();
+    private async void Awake()
+    {
+        _transport = FindObjectOfType<UnityTransport>();
+        await Authenticate();
+    } 
 
     #region buttons
     public async void CreateLobbyButton()
     {
-        await Authenticate();
+        //await Authenticate();
 
         _connectedLobby = await CreateLobby();
 
@@ -42,7 +46,6 @@ public class LobbyTest : MonoBehaviour
     }
     public async void QuickJoinLobbyButton()
     {
-        await Authenticate();
 
         _connectedLobby = await QuickJoinLobby();
 
@@ -57,7 +60,7 @@ public class LobbyTest : MonoBehaviour
     }
     public async void JoinCodeLobby()
     {
-        await Authenticate(); 
+        //await Authenticate(); 
 
         _connectedLobby = await JoinLobbyByCode(_joinInput.text);
 
@@ -65,8 +68,11 @@ public class LobbyTest : MonoBehaviour
     }
 
 
-#endregion
-    private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
+    #endregion
+
+
+
+        private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
     {
         try
         {

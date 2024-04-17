@@ -54,11 +54,11 @@ public class LobbyTest : MonoBehaviour
     
     public async void LeaveLobbyButton()
     {
-        GameManager.Instance.IsGameEnding();
         if (_connectedLobby != null) _connectedLobby = await LeaveLobby();
 
-        if(_connectedLobby == null) _buttons.SetActive(true);
+        if (_connectedLobby == null) _buttons.SetActive(true);
     }
+
     public async void JoinCodeLobby()
     {
         //await Authenticate(); 
@@ -212,6 +212,12 @@ public class LobbyTest : MonoBehaviour
             {
                 //LeaveLobbyButton();
                 await Lobbies.Instance.DeleteLobbyAsync(_connectedLobby.Id);
+
+                foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                {
+                    if (_connectedLobby == null) _buttons.SetActive(true);
+                }
+
                 NetworkManager.Singleton.Shutdown();
             }
             else

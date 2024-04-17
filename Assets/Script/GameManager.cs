@@ -30,7 +30,7 @@ public class GameManager : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
-        testmat.color = Color.gray;
+        testmat.color = Color.black;
         PlayerReadyDictionary = new Dictionary<ulong, bool>(); //use a dictionary to hold a large amount of different numbers of them, so infinite players (although i maxed it at 5)
         PlayerPauseDictionary = new Dictionary<ulong, bool>(); //use ulong as it then fits the clientid inside of it instead of using a string with can run out and do a 0x0004
     }

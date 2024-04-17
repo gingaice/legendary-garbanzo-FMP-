@@ -54,9 +54,10 @@ public class LobbyTest : MonoBehaviour
     
     public async void LeaveLobbyButton()
     {
-        if(_connectedLobby != null) _connectedLobby = await LeaveLobby();
+        GameManager.Instance.IsGameEnding();
+        if (_connectedLobby != null) _connectedLobby = await LeaveLobby();
 
-        if (_connectedLobby == null) _buttons.SetActive(true);
+        if(_connectedLobby == null) _buttons.SetActive(true);
     }
     public async void JoinCodeLobby()
     {
@@ -206,19 +207,20 @@ public class LobbyTest : MonoBehaviour
     {
         try
         {
-            if (_connectedLobby.HostId == AuthenticationService.Instance.PlayerId)
+            StopAllCoroutines();
+            if (_connectedLobby.HostId == _playerId)
             {
                 //LeaveLobbyButton();
                 await Lobbies.Instance.DeleteLobbyAsync(_connectedLobby.Id);
                 NetworkManager.Singleton.Shutdown();
-
             }
             else
             {
-                await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, AuthenticationService.Instance.PlayerId);
+                await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
             }
             
             _connectedLobby = null;
+            //if (_connectedLobby == null) _buttons.SetActive(true);
             return _connectedLobby;
         }
         catch(LobbyServiceException ex) 

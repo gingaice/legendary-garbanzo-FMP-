@@ -10,12 +10,14 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnLocalPlayerReadyChanged;
     public event EventHandler OnPause; //using events to tell the rest of the players whats going on by openly giving out information to anyone listening ( checkout dms with mo for a good reference)
     public event EventHandler OnUnpause;
+    public event EventHandler OnButtonsAppear;
 
     public Material testmat;
     private enum State
     {
         waitingToStart,
-        GamePlaying,// current only states will need a end game state soon for a timer that will be synced and shared across the game space
+        GamePlaying,
+        GameEnding,// current only states will need a end game state soon for a timer that will be synced and shared across the game space
     }
 
     private NetworkVariable<State> state = new NetworkVariable<State>(State.waitingToStart); //chooses the first state incase it tries to switch to a different one from load
@@ -45,6 +47,10 @@ public class GameManager : NetworkBehaviour
                 break;
             case State.GamePlaying: //i change the color to red so that it proves that it enters this next state will eventually be able to change this with a timer so that the game will eventually end
                 testmat.color = Color.red; 
+                break;
+            case State.GameEnding:
+                testmat.color = Color.blue;
+                OnButtonsAppear?.Invoke(this, EventArgs.Empty);
                 break;
         }
 
@@ -144,6 +150,11 @@ public class GameManager : NetworkBehaviour
     public bool IsWaitingToStart()
     {
         return state.Value == State.waitingToStart;
+    }
+
+    public bool IsGameEnding()
+    {
+        return state.Value == State.GameEnding;
     }
 
     public bool IsLocalPlayerReady()

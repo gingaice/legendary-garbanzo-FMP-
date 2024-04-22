@@ -29,6 +29,7 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private TMP_Text _joinCodeText;
     [SerializeField] private TMP_InputField _joinInput;
     [SerializeField] private Toggle _privGame;
+    [SerializeField] private TMP_Dropdown _KickList;
 
 
     private async void Awake()
@@ -71,7 +72,6 @@ public class LobbyTest : MonoBehaviour
     }
     #endregion
 
-
     private async Task Authenticate()
     {
         var options = new InitializationOptions();
@@ -98,17 +98,14 @@ public class LobbyTest : MonoBehaviour
             // Set the details to the transform
             SetTransformAsClient(a);
 
-            // Join the game room as a client
-            NetworkManager.Singleton.StartClient();
             _joinCodeText.text = lobby.LobbyCode;
 
-            #region kicklist stuff
-            GameManager.Instance._KickList.gameObject.SetActive(false);
+            _KickList.gameObject.SetActive(false);
+            //_KickList.AddOptions(new List<string> { _playerId});
 
-            GameManager.Instance._KickList.AddOptions(new List<string> { _playerId });
-
-
-            #endregion
+            // Join the game room as a client
+            NetworkManager.Singleton.StartClient();
+           
             return lobby;
         }
         catch (Exception e)
@@ -129,10 +126,12 @@ public class LobbyTest : MonoBehaviour
             var a = await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
 
             SetTransformAsClient(a);
-
-            NetworkManager.Singleton.StartClient();
             _joinCodeText.text = lobbyCode;
-            GameManager.Instance._KickList.gameObject.SetActive(false);
+
+            _KickList.gameObject.SetActive(false);
+
+            // Join the game room as a client
+            NetworkManager.Singleton.StartClient();
             return lobby;
         }
         catch (LobbyServiceException ex)
@@ -141,6 +140,31 @@ public class LobbyTest : MonoBehaviour
             return null;
         }
     }
+    private async void refreshKickDD()
+    {
+        _KickList.ClearOptions();
+        List<TMP_Dropdown.OptionData> data = new List<TMP_Dropdown.OptionData>();
+        TMP_Dropdown.OptionData newData = new TMP_Dropdown.OptionData();
+
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            string playerName = clientId.ToString();
+
+
+            //Debug.Log(clientId + " clizzy");
+            newData.text = playerName;
+            data.Add(newData);
+
+        }
+
+        if(data.Count == 0 ) 
+        {
+            newData.text = "bah humbug";
+            data.Add(newData);
+        }
+        _KickList.AddOptions(data);
+    }
+
     private async Task<Lobby> CreateLobby()
     {
         try
@@ -173,16 +197,12 @@ public class LobbyTest : MonoBehaviour
             //_joinCodeText.text = joinCode;
             _joinCodeText.text = lobby.LobbyCode; //lobby.lobbycode it to connect to a pre existing lobby
 
-
-
             // Send a heartbeat every 15 seconds to keep the room alive
             StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 15)); //after 30 seconds of inactivity it auto closes
-            StartCoroutine(whosIn( 3));
+            StartCoroutine(whosIn( 5));
 
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
-
             NetworkManager.Singleton.StartHost();
-            GameManager.Instance._KickList.gameObject.SetActive(true);
             return lobby;
         }
         catch (Exception e)
@@ -191,7 +211,6 @@ public class LobbyTest : MonoBehaviour
             return null;
         }
     }
-
     private void SetTransformAsClient(JoinAllocation a)
     {
         _transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
@@ -210,27 +229,13 @@ public class LobbyTest : MonoBehaviour
     private IEnumerator whosIn(float waitTimeSeconds)
     {
         var delay = new WaitForSecondsRealtime(waitTimeSeconds);
-        int CurPlayers = 0;
         while (true)
         {
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                CurPlayers++;
+                refreshKickDD();
             }
-            Debug.Log("amount of players; " + CurPlayers);
             yield return delay;
-        }
-    }
-
-    private async Task<Lobby> PlayerKick()
-    {
-        try
-        {
-            return null;
-        }
-        catch 
-        {
-            return null;
         }
     }
     private async Task<Lobby> LeaveLobby()

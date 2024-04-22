@@ -33,7 +33,7 @@ public class GameManager : NetworkBehaviour
     private NetworkVariable<bool> isGamePaused = new NetworkVariable<bool>(false);
 
 
-    public TMP_Dropdown _KickList;
+    //public TMP_Dropdown _KickList;
 
     private void Awake()
     {

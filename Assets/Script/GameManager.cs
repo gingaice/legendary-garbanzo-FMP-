@@ -41,10 +41,6 @@ public class GameManager : NetworkBehaviour
         {
             case State.waitingToStart:
                 testmat.color = Color.black;//currently doesnt need to do anything in this section as its for gaining players in the "lobby"
-                //if (isLocalPlayerReady)
-                //{
-                //    state.Value = State.GamePlaying; 
-                //}
                 break;
             case State.GamePlaying: //i change the color to red so that it proves that it enters this next state will eventually be able to change this with a timer so that the game will eventually end
                 testmat.color = Color.red; 

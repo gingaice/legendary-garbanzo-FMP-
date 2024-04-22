@@ -29,6 +29,8 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private TMP_Text _joinCodeText;
     [SerializeField] private TMP_InputField _joinInput;
     [SerializeField] private Toggle _privGame;
+    [SerializeField] private TMP_Dropdown _KickList;
+
     private async void Awake()
     {
         _transport = FindObjectOfType<UnityTransport>();
@@ -67,32 +69,9 @@ public class LobbyTest : MonoBehaviour
 
         if(_connectedLobby != null) _buttons.SetActive(false);
     }
-
-    private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
-    {
-        try
-        {
-            //await Lobbies.Instance.JoinLobbyByIdAsync(_joinInput.text);
-
-            var lobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode);
-
-            //await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
-            var a = await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
-
-            SetTransformAsClient(a);
-
-            NetworkManager.Singleton.StartClient();
-            return lobby;
-        }
-        catch (LobbyServiceException ex)
-        {
-            Debug.Log(ex);
-            return null;
-        }
-    }
-
-
     #endregion
+
+
     private async Task Authenticate()
     {
         var options = new InitializationOptions();
@@ -103,6 +82,7 @@ public class LobbyTest : MonoBehaviour
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         _playerId = AuthenticationService.Instance.PlayerId;
+        
     }
 
     private async Task<Lobby> QuickJoinLobby()
@@ -120,6 +100,13 @@ public class LobbyTest : MonoBehaviour
 
             // Join the game room as a client
             NetworkManager.Singleton.StartClient();
+            _joinCodeText.text = lobby.LobbyCode;
+
+            #region kicklist stuff
+            _KickList.gameObject.SetActive(false);
+
+            _KickList.AddOptions(new List<string> {_playerId});
+            #endregion
             return lobby;
         }
         catch (Exception e)
@@ -127,8 +114,31 @@ public class LobbyTest : MonoBehaviour
             Debug.Log($"No lobbies available via quick join");
             return null;
         }
-    }    
-    
+    }
+    private async Task<Lobby> JoinLobbyByCode(string lobbyCode)
+    {
+        try
+        {
+            //await Lobbies.Instance.JoinLobbyByIdAsync(_joinInput.text);
+
+            var lobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode);
+
+            //await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
+            var a = await RelayService.Instance.JoinAllocationAsync(lobby.Data[JoinCodeKey].Value);
+
+            SetTransformAsClient(a);
+
+            NetworkManager.Singleton.StartClient();
+            _joinCodeText.text = lobbyCode;
+            _KickList.gameObject.SetActive(false);
+            return lobby;
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.Log(ex);
+            return null;
+        }
+    }
     private async Task<Lobby> CreateLobby()
     {
         try
@@ -170,6 +180,7 @@ public class LobbyTest : MonoBehaviour
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
             NetworkManager.Singleton.StartHost();
+            _KickList.gameObject.SetActive(true);
             return lobby;
         }
         catch (Exception e)
@@ -209,7 +220,17 @@ public class LobbyTest : MonoBehaviour
         }
     }
 
-
+    private async Task<Lobby> PlayerKick()
+    {
+        try
+        {
+            return null;
+        }
+        catch 
+        {
+            return null;
+        }
+    }
     private async Task<Lobby> LeaveLobby()
     {
         try
@@ -230,10 +251,10 @@ public class LobbyTest : MonoBehaviour
                 NetworkManager.Singleton.Shutdown();
                 await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
             }
-            
-            _connectedLobby = null;
+           
             //if (_connectedLobby == null) _buttons.SetActive(true);
             GameManager.Instance.restart();
+            lobbyRestart();
             return _connectedLobby;
         }
         catch(LobbyServiceException ex) 
@@ -242,7 +263,6 @@ public class LobbyTest : MonoBehaviour
             return null;
         }
     }
-
     private void OnDestroy()
     {
         try
@@ -260,7 +280,11 @@ public class LobbyTest : MonoBehaviour
             Debug.Log($"Error shutting down lobby: {e}");
         }
     }
-
+    private void lobbyRestart()
+    {
+        _connectedLobby = null;
+        _joinCodeText.text = null;
+    }
 }
 
 //{
@@ -280,17 +304,6 @@ public class LobbyTest : MonoBehaviour
 //        await AuthenticationService.Instance.SignInAnonymouslyAsync();
 //        playerName = "bong" + Random.Range(1, 36);
 //        Debug.Log("Id is: " + playerName);
-//    }
-
-
-//    private IEnumerator HeartBeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
-//    {
-//        var delay = new WaitForSecondsRealtime(waitTimeSeconds);
-//        while (true)
-//        {
-//            Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
-//            yield return delay;
-//        }
 //    }
 
 

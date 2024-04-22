@@ -29,7 +29,7 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private TMP_Text _joinCodeText;
     [SerializeField] private TMP_InputField _joinInput;
     [SerializeField] private Toggle _privGame;
-    [SerializeField] private TMP_Dropdown _KickList;
+
 
     private async void Awake()
     {
@@ -103,9 +103,11 @@ public class LobbyTest : MonoBehaviour
             _joinCodeText.text = lobby.LobbyCode;
 
             #region kicklist stuff
-            _KickList.gameObject.SetActive(false);
+            GameManager.Instance._KickList.gameObject.SetActive(false);
 
-            _KickList.AddOptions(new List<string> {_playerId});
+            GameManager.Instance._KickList.AddOptions(new List<string> { _playerId });
+
+
             #endregion
             return lobby;
         }
@@ -130,7 +132,7 @@ public class LobbyTest : MonoBehaviour
 
             NetworkManager.Singleton.StartClient();
             _joinCodeText.text = lobbyCode;
-            _KickList.gameObject.SetActive(false);
+            GameManager.Instance._KickList.gameObject.SetActive(false);
             return lobby;
         }
         catch (LobbyServiceException ex)
@@ -180,7 +182,7 @@ public class LobbyTest : MonoBehaviour
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
             NetworkManager.Singleton.StartHost();
-            _KickList.gameObject.SetActive(true);
+            GameManager.Instance._KickList.gameObject.SetActive(true);
             return lobby;
         }
         catch (Exception e)

@@ -377,6 +377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testmat: {fileID: 2100000, guid: 11123ad5c891b9649bb47404e0cae1b3, type: 2}
+  _KickList: {fileID: 1130224816}
 --- !u!114 &284131002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4121,7 +4122,6 @@ MonoBehaviour:
   _joinCodeText: {fileID: 2008065531}
   _joinInput: {fileID: 653296371}
   _privGame: {fileID: 1318500248}
-  _KickList: {fileID: 1130224816}
 --- !u!1 &1725902959
 GameObject:
   m_ObjectHideFlags: 0

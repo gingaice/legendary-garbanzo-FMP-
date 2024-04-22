@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -30,7 +31,6 @@ public class GameManager : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
-        testmat.color = Color.black;
         PlayerReadyDictionary = new Dictionary<ulong, bool>(); //use a dictionary to hold a large amount of different numbers of them, so infinite players (although i maxed it at 5)
         PlayerPauseDictionary = new Dictionary<ulong, bool>(); //use ulong as it then fits the clientid inside of it instead of using a string with can run out and do a 0x0004
     }
@@ -39,7 +39,8 @@ public class GameManager : NetworkBehaviour
     {
         switch (state.Value)
         {
-            case State.waitingToStart: //currently doesnt need to do anything in this section as its for gaining players in the "lobby"
+            case State.waitingToStart:
+                testmat.color = Color.black;//currently doesnt need to do anything in this section as its for gaining players in the "lobby"
                 //if (isLocalPlayerReady)
                 //{
                 //    state.Value = State.GamePlaying; 
@@ -113,9 +114,7 @@ public class GameManager : NetworkBehaviour
             SetPlayerReadyServerRpc();
 
             OnLocalPlayerReadyChanged?.Invoke(this, EventArgs.Empty); //this logs that the locla player has clicked the button saying that they are ready to move into the actual game
-        }
-
-        
+        } 
     }
 
     public void readyButtonPressed()
@@ -142,6 +141,11 @@ public class GameManager : NetworkBehaviour
         {
             state.Value = State.GamePlaying; //changes the state into playing which will chang ethe floor currently
         }
+    }
+    public void restart()
+    {
+        isLocalPlayerReady = false;
+        state.Value = State.waitingToStart;
     }
     public bool IsGamePlaying()
     {

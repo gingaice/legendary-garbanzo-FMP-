@@ -150,7 +150,6 @@ public class LobbyTest : MonoBehaviour
             if (_privGame.isOn)
             {
                 options.IsPrivate = true;
-
             }
             else
             {
@@ -162,9 +161,11 @@ public class LobbyTest : MonoBehaviour
             //_joinCodeText.text = joinCode;
             _joinCodeText.text = lobby.LobbyCode; //lobby.lobbycode it to connect to a pre existing lobby
 
+
+
             // Send a heartbeat every 15 seconds to keep the room alive
             StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 15)); //after 30 seconds of inactivity it auto closes
-            StartCoroutine(HeartBeatLobbyCoroutine(lobby.Id, 1.1f)); //after 30 seconds of inactivity it auto closes
+            StartCoroutine(whosIn( 3));
 
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
@@ -191,17 +192,23 @@ public class LobbyTest : MonoBehaviour
             Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
             yield return delay;
         }
-    }
-    private IEnumerator LobbyPollCoroutine(string lobbyId, float waitTimeSeconds)
+    }    
+    
+    private IEnumerator whosIn(float waitTimeSeconds)
     {
         var delay = new WaitForSecondsRealtime(waitTimeSeconds);
+        int CurPlayers = 0;
         while (true)
         {
-            Lobbies.Instance.GetLobbyAsync(lobbyId);
-            
+            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                CurPlayers++;
+            }
+            Debug.Log("amount of players; " + CurPlayers);
             yield return delay;
         }
     }
+
 
     private async Task<Lobby> LeaveLobby()
     {
@@ -210,23 +217,23 @@ public class LobbyTest : MonoBehaviour
             StopAllCoroutines();
             if (_connectedLobby.HostId == _playerId)
             {
-                //LeaveLobbyButton();
-                await Lobbies.Instance.DeleteLobbyAsync(_connectedLobby.Id);
 
-                foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-                {
-                    if (_connectedLobby == null) _buttons.SetActive(true);
-                }
-
+                //foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+                //{
+                //    if (_connectedLobby == null) _buttons.SetActive(true);
+                //}
+                await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
                 NetworkManager.Singleton.Shutdown();
             }
             else
             {
+                NetworkManager.Singleton.Shutdown();
                 await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
             }
             
             _connectedLobby = null;
             //if (_connectedLobby == null) _buttons.SetActive(true);
+            GameManager.Instance.restart();
             return _connectedLobby;
         }
         catch(LobbyServiceException ex) 
@@ -253,6 +260,7 @@ public class LobbyTest : MonoBehaviour
             Debug.Log($"Error shutting down lobby: {e}");
         }
     }
+
 }
 
 //{

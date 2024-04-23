@@ -235,7 +235,7 @@ public class LobbyTest : MonoBehaviour
         {
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                refreshKickDD();
+                //refreshKickDD();
             }
             yield return delay;
         }

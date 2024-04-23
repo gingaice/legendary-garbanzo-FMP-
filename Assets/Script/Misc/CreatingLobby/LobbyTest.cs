@@ -209,7 +209,7 @@ public class LobbyTest : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogFormat("Failed creating a lobby");
+            Debug.LogFormat("Failed creating a lobby: " + e);
             return null;
         }
     }
@@ -235,7 +235,7 @@ public class LobbyTest : MonoBehaviour
         {
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                //refreshKickDD();
+                refreshKickDD();
             }
             yield return delay;
         }

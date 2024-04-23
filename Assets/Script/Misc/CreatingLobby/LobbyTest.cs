@@ -146,12 +146,14 @@ public class LobbyTest : MonoBehaviour
         List<TMP_Dropdown.OptionData> data = new List<TMP_Dropdown.OptionData>();
         TMP_Dropdown.OptionData newData = new TMP_Dropdown.OptionData();
 
+        string playerName = null;
+
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            string playerName = clientId.ToString();
+            playerName = clientId.ToString();
 
 
-            //Debug.Log(clientId + " clizzy");
+            Debug.Log(clientId + " clizzy");
             newData.text = playerName;
             data.Add(newData);
 

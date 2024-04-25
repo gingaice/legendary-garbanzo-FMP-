@@ -75,12 +75,11 @@ public class LobbyTest : MonoBehaviour
 
     public async void KickFromLobbyButton()
     {
-        if (_connectedLobby != null) _connectedLobby = await KickedFromLobby();
+        if (_connectedLobby != null) _connectedLobby = await KickedFromGame();
 
-        if (_connectedLobby == null) _buttons.SetActive(true);
     }
     #endregion
-    private async Task<Lobby> KickedFromLobby()
+    private async Task<Lobby> KickedFromGame()
     {
         //string kickedPlayerId = null;
         //NetworkManager.Singleton.ConnectedClients.Values = kickedPlayerId;
@@ -95,12 +94,8 @@ public class LobbyTest : MonoBehaviour
                 }
             }
 
+            KickedFromLobby();
 
-            var playerToRemove = _connectedLobby.Players[_KickList.value];
-
-            await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, playerToRemove.Id);
-            GameManager.Instance.restart();
-            lobbyRestart();
             //_playerId = _KickList.value
 
             //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
@@ -113,6 +108,17 @@ public class LobbyTest : MonoBehaviour
             return null;
         }
     }
+
+    private void KickedFromLobby()
+    {
+        var playerToRemove = _connectedLobby.Players[_KickList.value];
+
+        Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, playerToRemove.Id);
+        GameManager.Instance.restart();
+        lobbyRestart();
+
+    }
+
     private async Task Authenticate()
     {
         var options = new InitializationOptions();

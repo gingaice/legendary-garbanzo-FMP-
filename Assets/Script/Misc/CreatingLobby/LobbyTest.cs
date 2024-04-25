@@ -84,7 +84,6 @@ public class LobbyTest : MonoBehaviour
         _playerId = AuthenticationService.Instance.PlayerId;
         
     }
-
     private async Task<Lobby> QuickJoinLobby()
     {
         try
@@ -144,23 +143,22 @@ public class LobbyTest : MonoBehaviour
     {
         _KickList.ClearOptions();
         List<TMP_Dropdown.OptionData> data = new List<TMP_Dropdown.OptionData>();
-        TMP_Dropdown.OptionData newData = new TMP_Dropdown.OptionData();
 
         string playerName = null;
 
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            playerName = clientId.ToString();
-
+            TMP_Dropdown.OptionData newData = new TMP_Dropdown.OptionData();
+            playerName = _playerId;
 
             Debug.Log(clientId + " clizzy");
             newData.text = playerName;
             data.Add(newData);
-
         }
 
         if(data.Count == 0 ) 
         {
+            TMP_Dropdown.OptionData newData = new TMP_Dropdown.OptionData();
             newData.text = "bah humbug";
             data.Add(newData);
         }
@@ -233,10 +231,10 @@ public class LobbyTest : MonoBehaviour
         var delay = new WaitForSecondsRealtime(waitTimeSeconds);
         while (true)
         {
-            foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-            {
+            //foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            //{
                 refreshKickDD();
-            }
+            //}
             yield return delay;
         }
     }
@@ -271,6 +269,24 @@ public class LobbyTest : MonoBehaviour
             Debug.LogException(ex);
             return null;
         }
+    }
+
+    private async Task<Lobby> KickFromLobby()
+    {
+        try
+        {
+
+
+            await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
+
+            return null;
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+            return null;
+        }
+
     }
     private void OnDestroy()
     {

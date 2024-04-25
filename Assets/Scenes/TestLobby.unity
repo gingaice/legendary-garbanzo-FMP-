@@ -4392,6 +4392,7 @@ MonoBehaviour:
   _joinInput: {fileID: 653296371}
   _privGame: {fileID: 1318500248}
   _KickList: {fileID: 1130224816}
+  _KickButton: {fileID: 1640202484}
 --- !u!1 &1725902959
 GameObject:
   m_ObjectHideFlags: 0

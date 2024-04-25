@@ -31,7 +31,7 @@ public class LobbyTest : MonoBehaviour
     [SerializeField] private TMP_InputField _joinInput;
     [SerializeField] private Toggle _privGame;
     [SerializeField] private TMP_Dropdown _KickList;
-
+    [SerializeField] private Button _KickButton;
 
     private async void Awake()
     {
@@ -82,27 +82,35 @@ public class LobbyTest : MonoBehaviour
     #endregion
     private async Task<Lobby> KickedFromLobby()
     {
-        string kickedPlayerId = null;
+        //string kickedPlayerId = null;
         //NetworkManager.Singleton.ConnectedClients.Values = kickedPlayerId;
-        
         try
         {
             foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
                 if(clientId.ToString() == _KickList.value.ToString())
                 {
+                    if(_connectedLobby.HostId == _KickList.value.ToString()) break;
                     NetworkManager.Singleton.DisconnectClient(clientId);
                 }
             }
-                //_playerId = _KickList.value
 
-                //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
+
+            var playerToRemove = _connectedLobby.Players[_KickList.value];
+
+            await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, playerToRemove.Id);
+            GameManager.Instance.restart();
+            lobbyRestart();
+            //_playerId = _KickList.value
+
+            //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
             //NetworkManager.Singleton.DisconnectClient()
-            return null;
-        }
-        catch
-        {
             return _connectedLobby;
+        }
+        catch(Exception ex)
+        {
+            Debug.LogException(ex);
+            return null;
         }
     }
     private async Task Authenticate()
@@ -133,16 +141,17 @@ public class LobbyTest : MonoBehaviour
             _joinCodeText.text = lobby.LobbyCode;
 
             _KickList.gameObject.SetActive(false);
+            _KickButton.gameObject.SetActive(false);
             //_KickList.AddOptions(new List<string> { _playerId});
 
             // Join the game room as a client
             NetworkManager.Singleton.StartClient();
-           
+            //GameManager.Instance.playersJoined.Add(_playerId);
             return lobby;
         }
         catch (Exception e)
         {
-            Debug.Log($"No lobbies available via quick join");
+            Debug.Log($"No lobbies available via quick join: " + e);
             return null;
         }
     }
@@ -161,6 +170,7 @@ public class LobbyTest : MonoBehaviour
             _joinCodeText.text = lobbyCode;
 
             _KickList.gameObject.SetActive(false);
+            _KickButton.gameObject.SetActive(false);
 
             // Join the game room as a client
             NetworkManager.Singleton.StartClient();
@@ -236,6 +246,7 @@ public class LobbyTest : MonoBehaviour
 
             _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
             NetworkManager.Singleton.StartHost();
+            //GameManager.Instance.playersJoined.Add(_playerId);
             return lobby;
         }
         catch (Exception e)
@@ -325,6 +336,7 @@ public class LobbyTest : MonoBehaviour
     {
         _connectedLobby = null;
         _joinCodeText.text = null;
+        if (_connectedLobby == null) _buttons.SetActive(true);
     }
 }
 

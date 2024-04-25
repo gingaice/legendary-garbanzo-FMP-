@@ -14,7 +14,6 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnPause; //using events to tell the rest of the players whats going on by openly giving out information to anyone listening ( checkout dms with mo for a good reference)
     public event EventHandler OnUnpause;
     public event EventHandler OnButtonsAppear;
-    //public event EventHandler OnLocalPlayerAddedToList;
 
     public Material testmat;
     private enum State
@@ -39,8 +38,7 @@ public class GameManager : NetworkBehaviour
     {
         Instance = this;
         PlayerReadyDictionary = new Dictionary<ulong, bool>(); //use a dictionary to hold a large amount of different numbers of them, so infinite players (although i maxed it at 5)
-        PlayerPauseDictionary = new Dictionary<ulong, bool>(); //use ulong as it then fits the clientid inside of it instead of using a string with can run out and do a 0x0004
-        
+        PlayerPauseDictionary = new Dictionary<ulong, bool>(); //use ulong as it then fits the clientid inside of it instead of using a string with can run out and do a 0x0004        
     }
 
     private void Update()
@@ -147,6 +145,7 @@ public class GameManager : NetworkBehaviour
             state.Value = State.GamePlaying; //changes the state into playing which will chang ethe floor currently
         }
     }    
+   
    
     public void restart()
     {

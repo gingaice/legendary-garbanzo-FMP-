@@ -14,6 +14,7 @@ using Unity.Services.Relay;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEditor.Networking.PlayerConnection;
 
 
 public class LobbyTest : MonoBehaviour
@@ -70,8 +71,40 @@ public class LobbyTest : MonoBehaviour
 
         if(_connectedLobby != null) _buttons.SetActive(false);
     }
-    #endregion
 
+
+    public async void KickFromLobbyButton()
+    {
+        if (_connectedLobby != null) _connectedLobby = await KickedFromLobby();
+
+        if (_connectedLobby == null) _buttons.SetActive(true);
+    }
+    #endregion
+    private async Task<Lobby> KickedFromLobby()
+    {
+        string kickedPlayerId = null;
+        //NetworkManager.Singleton.ConnectedClients.Values = kickedPlayerId;
+        
+        try
+        {
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                if(clientId.ToString() == _KickList.value.ToString())
+                {
+                    NetworkManager.Singleton.DisconnectClient(clientId);
+                }
+            }
+                //_playerId = _KickList.value
+
+                //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
+            //NetworkManager.Singleton.DisconnectClient()
+            return null;
+        }
+        catch
+        {
+            return _connectedLobby;
+        }
+    }
     private async Task Authenticate()
     {
         var options = new InitializationOptions();
@@ -149,9 +182,9 @@ public class LobbyTest : MonoBehaviour
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
             TMP_Dropdown.OptionData newData = new TMP_Dropdown.OptionData();
-            playerName = _playerId;
-
-            Debug.Log(clientId + " clizzy");
+            playerName = clientId.ToString();
+            
+            //Debug.Log(clientId + " clizzy");
             newData.text = playerName;
             data.Add(newData);
         }
@@ -233,7 +266,8 @@ public class LobbyTest : MonoBehaviour
         {
             //foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             //{
-                refreshKickDD();
+            Debug.Log(_KickList.value + " this valie is the one to look at");
+            refreshKickDD();
             //}
             yield return delay;
         }
@@ -269,24 +303,6 @@ public class LobbyTest : MonoBehaviour
             Debug.LogException(ex);
             return null;
         }
-    }
-
-    private async Task<Lobby> KickFromLobby()
-    {
-        try
-        {
-
-
-            await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
-
-            return null;
-        }
-        catch (LobbyServiceException ex)
-        {
-            Debug.LogException(ex);
-            return null;
-        }
-
     }
     private void OnDestroy()
     {

@@ -8,11 +8,13 @@ public class PlayerShoot : NetworkBehaviour
     [SerializeField]
     public GameObject Gun;
     [SerializeField]
-    private int ammo;
+    public int ammo;
 
     [SerializeField]
     private GameObject bullet;
     public Transform bulletSpawn;
+
+    private const int maxAmmoCount = 12;
 
     private void Update()
     {
@@ -24,6 +26,12 @@ public class PlayerShoot : NetworkBehaviour
                 RequestFireServerRpc(); //sends a request to the server too spawn in the projectile so that others can see the projectiles
                 Fire();
             }
+        }
+
+        if(!IsOwner) return;
+        if(Input.GetKeyUp (KeyCode.Mouse1))
+        {
+            ammo = maxAmmoCount;
         }
     }
 

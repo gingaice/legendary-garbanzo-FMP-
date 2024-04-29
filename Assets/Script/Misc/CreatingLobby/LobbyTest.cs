@@ -15,6 +15,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEditor.Networking.PlayerConnection;
+using Palmmedia.ReportGenerator.Core.Common;
 
 
 public class LobbyTest : MonoBehaviour

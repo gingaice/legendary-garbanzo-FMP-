@@ -31,12 +31,14 @@ public class GameManager : NetworkBehaviour
     private bool isLocalPlayerPaused = false;    
     private NetworkVariable<bool> isGamePaused = new NetworkVariable<bool>(false);
 
-
+    [SerializeField] private Canvas _kickcanvas;
+    [SerializeField] private TMP_Text _AmmoCount;
     //public TMP_Dropdown _KickList;
 
     private void Awake()
     {
         Instance = this;
+        _kickcanvas.gameObject.SetActive(false);
         PlayerReadyDictionary = new Dictionary<ulong, bool>(); //use a dictionary to hold a large amount of different numbers of them, so infinite players (although i maxed it at 5)
         PlayerPauseDictionary = new Dictionary<ulong, bool>(); //use ulong as it then fits the clientid inside of it instead of using a string with can run out and do a 0x0004        
     }
@@ -69,12 +71,14 @@ public class GameManager : NetworkBehaviour
         if (isLocalPlayerPaused)
         {
             PauseGameServerRpc();
+            _kickcanvas.gameObject.SetActive(true);
             Time.timeScale = 0; //this is for the local player as later on it will only freeze it for other players on the server
             OnPause?.Invoke(this, EventArgs.Empty); //this sends the information to everyone listening too it but it ignores EVERYTHING if they dont want to listen
         }
         else
         {
             UnpauseGameServerRpc();
+            _kickcanvas.gameObject.SetActive(false);
             Time.timeScale = 1; // ^^
             OnUnpause?.Invoke(this, EventArgs.Empty);
         }

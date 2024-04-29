@@ -181,6 +181,7 @@ public class LobbyTest : MonoBehaviour
 
             // Join the game room as a client
             NetworkManager.Singleton.StartClient();
+            
             return lobby;
         }
         catch (LobbyServiceException ex)

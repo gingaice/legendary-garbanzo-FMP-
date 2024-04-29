@@ -93,7 +93,6 @@ public class PlayerShoot : NetworkBehaviour
     }
     public void Fire()
     {
-
         Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
         ammo = ammo - 1;
     }

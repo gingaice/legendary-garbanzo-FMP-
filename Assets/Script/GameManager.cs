@@ -32,7 +32,7 @@ public class GameManager : NetworkBehaviour
     private NetworkVariable<bool> isGamePaused = new NetworkVariable<bool>(false);
 
     [SerializeField] private Canvas _kickcanvas;
-    [SerializeField] private TMP_Text _AmmoCount;
+    public TMP_Text _AmmoCount;
     //public TMP_Dropdown _KickList;
 
     private void Awake()
@@ -51,7 +51,8 @@ public class GameManager : NetworkBehaviour
                 testmat.color = Color.black;//currently doesnt need to do anything in this section as its for gaining players in the "lobby"
                 break;
             case State.GamePlaying: //i change the color to red so that it proves that it enters this next state will eventually be able to change this with a timer so that the game will eventually end
-                testmat.color = Color.red; 
+                testmat.color = Color.red;
+                
                 break;
             case State.GameEnding:
                 testmat.color = Color.blue;

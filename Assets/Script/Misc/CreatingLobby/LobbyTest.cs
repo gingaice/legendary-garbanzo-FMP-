@@ -284,7 +284,7 @@ public class LobbyTest : MonoBehaviour
         {
             //foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             //{
-            Debug.Log(_KickList.value + " this valie is the one to look at");
+            //Debug.Log(_KickList.value + " this valie is the one to look at");
             refreshKickDD();
             //}
             yield return delay;

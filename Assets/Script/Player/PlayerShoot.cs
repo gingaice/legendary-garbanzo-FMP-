@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
+using Unity.Services.Lobbies;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerShoot : NetworkBehaviour
 {
+    public static PlayerShoot Instance { get; private set; }
+
     [SerializeField]
     public GameObject Gun;
-    [SerializeField]
+    
     public int ammo;
 
     [SerializeField]
@@ -16,10 +21,17 @@ public class PlayerShoot : NetworkBehaviour
 
     private const int maxAmmoCount = 12;
 
+    private bool isReloading = false;
+    private bool CanShoot = true;
+    private float reloadSpeed = 2;
+
     private void Update()
     {
         if(!IsOwner) return;
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        GameManager.Instance._AmmoCount.text = ammo.ToString();
+
+        if (!IsOwner) return;
+        if (Input.GetKeyUp(KeyCode.Mouse0) && CanShoot)
         {
             if(ammo > 0)
             {
@@ -27,12 +39,42 @@ public class PlayerShoot : NetworkBehaviour
                 Fire();
             }
         }
-
-        if(!IsOwner) return;
-        if(Input.GetKeyUp (KeyCode.Mouse1))
+        if (!IsOwner) return;
+        if(Input.GetKeyDown (KeyCode.R) && !isReloading)
         {
-            ammo = maxAmmoCount;
+            RequestReloadServerRpc();
+            //ReloadCoroutine(reloadSpeed);
+            StartCoroutine(ReloadCoroutine(reloadSpeed));
         }
+    }
+
+    [ServerRpc]
+    void RequestReloadServerRpc()
+    {
+        ReloadClientRpc();
+    }
+
+    [ClientRpc]
+    void ReloadClientRpc()
+    {
+        if (!IsOwner)
+        {
+            //ReloadCoroutine(reloadSpeed);
+            StartCoroutine(ReloadCoroutine(reloadSpeed));
+        }
+    }
+    private IEnumerator ReloadCoroutine(float waitTimeSeconds)
+    {
+        Debug.Log("doign things");
+        isReloading = true;
+        CanShoot = false;
+        var delay = new WaitForSecondsRealtime(waitTimeSeconds);
+
+        yield return delay;
+
+        ammo = maxAmmoCount;
+        CanShoot = true;
+        isReloading = false;
     }
 
     [ServerRpc]
@@ -54,6 +96,5 @@ public class PlayerShoot : NetworkBehaviour
 
         Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
         ammo = ammo - 1;
-
     }
 }

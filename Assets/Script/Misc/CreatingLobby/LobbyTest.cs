@@ -1,4 +1,4 @@
-using ParrelSync;
+//using ParrelSync;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,8 +14,6 @@ using Unity.Services.Relay;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditor.Networking.PlayerConnection;
-using Palmmedia.ReportGenerator.Core.Common;
 
 
 public class LobbyTest : MonoBehaviour
@@ -124,7 +122,7 @@ public class LobbyTest : MonoBehaviour
     {
         var options = new InitializationOptions();
 
-        options.SetProfile(ClonesManager.IsClone() ? ClonesManager.GetArgument() : "Primary");
+        //options.SetProfile(ClonesManager.IsClone() ? ClonesManager.GetArgument() : "Primary");
 
         await UnityServices.InitializeAsync(options);
 

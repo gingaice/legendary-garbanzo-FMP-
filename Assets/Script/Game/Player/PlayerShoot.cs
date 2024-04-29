@@ -29,12 +29,14 @@ public class PlayerShoot : NetworkBehaviour
     [SerializeField]
     private int health;
 
-    private int _maxHealth = 5;
+    private const int _maxHealth = 5;
 
     private void Update()
     {
         if(!IsOwner) return;
-        GameManager.Instance._AmmoCount.text = ammo.ToString();
+        GameManager.Instance._AmmoCount.text = ammo.ToString();        
+        if(!IsOwner) return;
+        GameManager.Instance._healthCount.text = health.ToString();
 
         if (!IsOwner) return;
         if (Input.GetKeyUp(KeyCode.Mouse0) && CanShoot)
@@ -53,7 +55,6 @@ public class PlayerShoot : NetworkBehaviour
             StartCoroutine(ReloadCoroutine(reloadSpeed));
         }
     }
-
     public void takeDmg()
     {
         health = health - 1;
@@ -63,13 +64,13 @@ public class PlayerShoot : NetworkBehaviour
             Respawn();
         }
     }
-
     private void Respawn()
     {
-        this.transform.position = Spawnpoints.Instance.getRandomPoint();
+        transform.position = Spawnpoints.Instance.getRandomPoint();
         health = _maxHealth;
     }
 
+    #region reloading
     [ServerRpc]
     void RequestReloadServerRpc()
     {
@@ -98,7 +99,9 @@ public class PlayerShoot : NetworkBehaviour
         CanShoot = true;
         isReloading = false;
     }
+    #endregion
 
+    #region firing
     [ServerRpc]
     void RequestFireServerRpc()
     {
@@ -118,4 +121,5 @@ public class PlayerShoot : NetworkBehaviour
         Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
         ammo = ammo - 1;
     }
+    #endregion
 }

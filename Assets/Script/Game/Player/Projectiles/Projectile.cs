@@ -17,17 +17,17 @@ public class Projectile : MonoBehaviour
     {
         if(other.gameObject.tag == "Objects")
         {
-            Debug.Log("hit COL");
+            //Debug.Log("hit COL");
             if(other.gameObject.layer == 7)
             {
                 //PlayerShoot.Instance.health = PlayerShoot.Instance.health - 1;
                 other.gameObject.GetComponent<PlayerShoot>().takeDmg();
                 //GetComponent<PlayerShoot>
                 //PlayerShoot.Instance.takeDmg();
-                Debug.Log("player hit");
-                Destroy(this.gameObject);
+                //Debug.Log("player hit");
             }
         }
+        Destroy(this.gameObject);
     }
     IEnumerator deleteBullet()
     {

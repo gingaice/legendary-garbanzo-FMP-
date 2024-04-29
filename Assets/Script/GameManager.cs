@@ -33,6 +33,7 @@ public class GameManager : NetworkBehaviour
 
     [SerializeField] private Canvas _kickcanvas;
     public TMP_Text _AmmoCount;
+    public TMP_Text _healthCount;
     //public TMP_Dropdown _KickList;
 
     private void Awake()

@@ -6,6 +6,11 @@ public class Spawnpoints : MonoBehaviour
 {
     public static Spawnpoints Instance { get; private set; }
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public Transform[] spawnPoints;
 
     public Vector3 getRandomPoint()

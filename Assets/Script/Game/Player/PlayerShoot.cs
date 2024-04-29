@@ -66,7 +66,7 @@ public class PlayerShoot : NetworkBehaviour
 
     private void Respawn()
     {
-        this.gameObject.transform.position = Spawnpoints.Instance.getRandomPoint();
+        this.transform.position = Spawnpoints.Instance.getRandomPoint();
         health = _maxHealth;
     }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Spawnpoints : MonoBehaviour
 {
+    public static Spawnpoints Instance { get; private set; }
+
     public Transform[] spawnPoints;
 
     public Vector3 getRandomPoint()

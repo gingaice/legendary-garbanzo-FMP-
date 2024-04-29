@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: -6533306209209002407}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Objects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3449229920
+  GlobalObjectIdHash: 1916491498
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -327,6 +327,7 @@ MonoBehaviour:
   ammo: 12
   bullet: {fileID: 7081826208824970008, guid: 60629a59a133ebb428a9c3ef31a58f13, type: 3}
   bulletSpawn: {fileID: 5833366810643743329}
+  health: 5
 --- !u!114 &-6533306209209002407
 MonoBehaviour:
   m_ObjectHideFlags: 0

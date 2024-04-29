@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
@@ -25,6 +26,11 @@ public class PlayerShoot : NetworkBehaviour
     private bool CanShoot = true;
     private float reloadSpeed = 2;
 
+    [SerializeField]
+    private int health;
+
+    private int _maxHealth = 5;
+
     private void Update()
     {
         if(!IsOwner) return;
@@ -48,6 +54,22 @@ public class PlayerShoot : NetworkBehaviour
         }
     }
 
+    public void takeDmg()
+    {
+        health = health - 1;
+
+        if(health < 0)
+        {
+            Respawn();
+        }
+    }
+
+    private void Respawn()
+    {
+        this.gameObject.transform.position = Spawnpoints.Instance.getRandomPoint();
+        health = _maxHealth;
+    }
+
     [ServerRpc]
     void RequestReloadServerRpc()
     {
@@ -65,7 +87,7 @@ public class PlayerShoot : NetworkBehaviour
     }
     private IEnumerator ReloadCoroutine(float waitTimeSeconds)
     {
-        Debug.Log("doign things");
+        //Debug.Log("doign things");
         isReloading = true;
         CanShoot = false;
         var delay = new WaitForSecondsRealtime(waitTimeSeconds);

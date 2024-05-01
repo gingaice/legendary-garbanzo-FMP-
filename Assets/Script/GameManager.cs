@@ -13,7 +13,6 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnLocalPlayerReadyChanged;
     public event EventHandler OnPause; //using events to tell the rest of the players whats going on by openly giving out information to anyone listening ( checkout dms with mo for a good reference)
     public event EventHandler OnUnpause;
-    public event EventHandler OnButtonsAppear;
 
     public Material testmat;
     private enum State
@@ -54,10 +53,6 @@ public class GameManager : NetworkBehaviour
             case State.GamePlaying: //i change the color to red so that it proves that it enters this next state will eventually be able to change this with a timer so that the game will eventually end
                 testmat.color = Color.red;
                 
-                break;
-            case State.GameEnding:
-                testmat.color = Color.blue;
-                OnButtonsAppear?.Invoke(this, EventArgs.Empty);
                 break;
         }
 
@@ -151,10 +146,9 @@ public class GameManager : NetworkBehaviour
             state.Value = State.GamePlaying; //changes the state into playing which will chang ethe floor currently
         }
     }    
-   
-   
     public void restart()
     {
+        _kickcanvas.gameObject.SetActive(false);
         isLocalPlayerReady = false;
         state.Value = State.waitingToStart;
     }
@@ -166,12 +160,10 @@ public class GameManager : NetworkBehaviour
     {
         return state.Value == State.waitingToStart;
     }
-
     public bool IsGameEnding()
     {
         return state.Value == State.GameEnding;
     }
-
     public bool IsLocalPlayerReady()
     {
         return isLocalPlayerReady;

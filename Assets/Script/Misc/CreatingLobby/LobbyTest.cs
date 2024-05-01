@@ -93,8 +93,6 @@ public class LobbyTest : MonoBehaviour
                 }
             }
 
-            KickedFromLobby();
-
             //_playerId = _KickList.value
 
             //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
@@ -110,12 +108,9 @@ public class LobbyTest : MonoBehaviour
 
     private void KickedFromLobby()
     {
-        var playerToRemove = _connectedLobby.Players[_KickList.value];
-
-        Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, playerToRemove.Id);
+        Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
         GameManager.Instance.restart();
         lobbyRestart();
-
     }
 
     private async Task Authenticate()

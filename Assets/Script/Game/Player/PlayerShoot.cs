@@ -23,7 +23,7 @@ public class PlayerShoot : NetworkBehaviour
     private const int maxAmmoCount = 12;
 
     private bool isReloading = false;
-    private bool CanShoot = true;
+    public bool CanShoot = true;
     private float reloadSpeed = 2;
 
     [SerializeField]

@@ -50,11 +50,11 @@ public class PlayerColour : NetworkBehaviour
         _netColor.Value = color;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!IsOwner) return;
-        CommitNetworkColorServerRpc(GetNextColor());
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!IsOwner) return;
+    //    CommitNetworkColorServerRpc(GetNextColor());
+    //}
 
     private Color GetNextColor()
     {

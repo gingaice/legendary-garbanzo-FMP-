@@ -1,4 +1,4 @@
-//using ParrelSync;
+using ParrelSync;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -117,7 +117,7 @@ public class LobbyTest : MonoBehaviour
     {
         var options = new InitializationOptions();
 
-        //options.SetProfile(ClonesManager.IsClone() ? ClonesManager.GetArgument() : "Primary");
+        options.SetProfile(ClonesManager.IsClone() ? ClonesManager.GetArgument() : "Primary");
 
         await UnityServices.InitializeAsync(options);
 
@@ -301,12 +301,12 @@ public class LobbyTest : MonoBehaviour
             }
             else
             {
+                GameManager.Instance.restart();
                 NetworkManager.Singleton.Shutdown();
                 await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
             }
            
             //if (_connectedLobby == null) _buttons.SetActive(true);
-            GameManager.Instance.restart();
             lobbyRestart();
             return _connectedLobby;
         }

@@ -28,6 +28,7 @@ public class GameManager : NetworkBehaviour
 
     private Dictionary<ulong, bool> PlayerPauseDictionary;    
     private bool isLocalPlayerPaused = false;    
+    public bool isPlayerPaused = false;    
     private NetworkVariable<bool> isGamePaused = new NetworkVariable<bool>(false);
 
     [SerializeField] private Canvas _kickcanvas;
@@ -69,6 +70,7 @@ public class GameManager : NetworkBehaviour
         {
             PauseGameServerRpc();
             _kickcanvas.gameObject.SetActive(true);
+            isPlayerPaused = true;
             Time.timeScale = 0; //this is for the local player as later on it will only freeze it for other players on the server
             OnPause?.Invoke(this, EventArgs.Empty); //this sends the information to everyone listening too it but it ignores EVERYTHING if they dont want to listen
         }
@@ -76,6 +78,7 @@ public class GameManager : NetworkBehaviour
         {
             UnpauseGameServerRpc();
             _kickcanvas.gameObject.SetActive(false);
+            isPlayerPaused = false;
             Time.timeScale = 1; // ^^
             OnUnpause?.Invoke(this, EventArgs.Empty);
         }
@@ -148,9 +151,9 @@ public class GameManager : NetworkBehaviour
     }    
     public void restart()
     {
+        TogglePaused();
         _kickcanvas.gameObject.SetActive(false);
         isLocalPlayerReady = false;
-        TogglePaused();
         state.Value = State.waitingToStart;
     }
     public bool IsGamePlaying()

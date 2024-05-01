@@ -38,6 +38,11 @@ public class PlayerShoot : NetworkBehaviour
         if(!IsOwner) return;
         GameManager.Instance._healthCount.text = health.ToString();
 
+        if (GameManager.Instance.isPlayerPaused)
+        {
+            CanShoot = false;
+        }
+
         if (!IsOwner) return;
         if (Input.GetKeyUp(KeyCode.Mouse0) && CanShoot)
         {

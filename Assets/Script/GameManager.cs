@@ -150,6 +150,7 @@ public class GameManager : NetworkBehaviour
     {
         _kickcanvas.gameObject.SetActive(false);
         isLocalPlayerReady = false;
+        TogglePaused();
         state.Value = State.waitingToStart;
     }
     public bool IsGamePlaying()

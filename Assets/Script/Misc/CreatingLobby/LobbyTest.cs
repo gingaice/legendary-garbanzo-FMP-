@@ -296,6 +296,7 @@ public class LobbyTest : MonoBehaviour
                 //{
                 //    if (_connectedLobby == null) _buttons.SetActive(true);
                 //}
+                GameManager.Instance.restart();
                 await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
                 NetworkManager.Singleton.Shutdown();
             }

@@ -13,18 +13,19 @@ public class Projectile : MonoBehaviour
         bulletRigid.AddForce(transform.forward * bulletSpeed * Time.deltaTime, ForceMode.Impulse);
         StartCoroutine(deleteBullet());
     }
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Objects")
+        if (other.gameObject.tag == "Objects")
         {
             //Debug.Log("hit COL");
-            if(other.gameObject.layer == 7) //7 is target layer
+            if (other.gameObject.layer == 7) //7 is target layer
             {
                 other.gameObject.GetComponent<PlayerShoot>().takeDmg();
             }
         }
         Destroy(this.gameObject);
     }
+
     IEnumerator deleteBullet()
     {
         yield return new WaitForSeconds(despawnTime);

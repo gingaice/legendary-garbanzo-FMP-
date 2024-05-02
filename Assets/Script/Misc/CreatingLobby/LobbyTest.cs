@@ -14,6 +14,7 @@ using Unity.Services.Relay;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 
 public class LobbyTest : MonoBehaviour
@@ -84,15 +85,26 @@ public class LobbyTest : MonoBehaviour
         //NetworkManager.Singleton.ConnectedClients.Values = kickedPlayerId;
         try
         {
-            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            //foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            //{
+            //    if(clientId.ToString() == _KickList.value.ToString())
+            //    {
+            //        if(_connectedLobby.HostId.ToString() == _KickList.value.ToString()) break;
+            //        NetworkManager.Singleton.DisconnectClient(clientId);
+            //    }
+            //}
+
+            foreach (var item in NetworkManager.Singleton.ConnectedClientsList)
             {
-                if(clientId.ToString() == _KickList.value.ToString())
+                if(item.PlayerObject.OwnerClientId.ToString() == _KickList.value.ToString())
                 {
-                    if(_connectedLobby.HostId == _KickList.value.ToString()) break;
-                    NetworkManager.Singleton.DisconnectClient(clientId);
+                    if (_connectedLobby.HostId.ToString() == _KickList.value.ToString()) break;
+                    NetworkObject player = item.PlayerObject;
+
+                    NetworkManager.Singleton.DisconnectClient(player.OwnerClientId);
+                    //KickedFromLobby();
                 }
             }
-
             //_playerId = _KickList.value
 
             //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
@@ -105,14 +117,6 @@ public class LobbyTest : MonoBehaviour
             return null;
         }
     }
-
-    private void KickedFromLobby()
-    {
-        Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
-        GameManager.Instance.restart();
-        lobbyRestart();
-    }
-
     private async Task Authenticate()
     {
         var options = new InitializationOptions();
@@ -183,9 +187,11 @@ public class LobbyTest : MonoBehaviour
             return null;
         }
     }
+
     private async void refreshKickDD()
     {
         _KickList.ClearOptions();
+        
         List<TMP_Dropdown.OptionData> data = new List<TMP_Dropdown.OptionData>();
 
         string playerName = null;

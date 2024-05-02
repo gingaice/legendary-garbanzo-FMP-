@@ -6,6 +6,7 @@ using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerShoot : NetworkBehaviour
 {
@@ -13,7 +14,7 @@ public class PlayerShoot : NetworkBehaviour
 
     [SerializeField]
     public GameObject Gun;
-    
+
     public int ammo;
 
     [SerializeField]
@@ -21,16 +22,17 @@ public class PlayerShoot : NetworkBehaviour
     public Transform bulletSpawn;
 
     private const int maxAmmoCount = 12;
-
     private bool isReloading = false;
     public bool CanShoot = true;
     private float reloadSpeed = 2;
 
     [SerializeField]
     private int health;
-
     private const int _maxHealth = 5;
 
+    private void Start()
+    {
+    }
     private void Update()
     {
         if(!IsOwner) return;
@@ -57,6 +59,8 @@ public class PlayerShoot : NetworkBehaviour
         {
             RequestReloadServerRpc();
             //ReloadCoroutine(reloadSpeed);
+            GameManager.Instance.ReloadSlider.gameObject.SetActive(true);
+            GameManager.Instance.ReloadSlider.maxValue = reloadSpeed;
             StartCoroutine(ReloadCoroutine(reloadSpeed));
         }
     }
@@ -93,16 +97,26 @@ public class PlayerShoot : NetworkBehaviour
     }
     private IEnumerator ReloadCoroutine(float waitTimeSeconds)
     {
-        //Debug.Log("doign things");
         isReloading = true;
         CanShoot = false;
-        var delay = new WaitForSecondsRealtime(waitTimeSeconds);
 
-        yield return delay;
+        //var delay = new WaitForSecondsRealtime(waitTimeSeconds);
+        //GameManager.Instance.ReloadSlider.value = delay.waitTime;
+        //yield return delay;
+        float timer = waitTimeSeconds;
+
+        while (timer > 0)
+        {
+            GameManager.Instance.ReloadSlider.value = timer; // Update slider value to reflect remaining wait time
+            yield return new WaitForSeconds(0.5f); // Wait for 1 second
+            timer -= 0.5f; // Decrease timer
+        }
+
 
         ammo = maxAmmoCount;
         CanShoot = true;
         isReloading = false;
+        GameManager.Instance.ReloadSlider.gameObject.SetActive(false);
     }
     #endregion
 

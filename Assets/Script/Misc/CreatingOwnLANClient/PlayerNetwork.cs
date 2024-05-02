@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -82,19 +83,16 @@ public class PlayerNetwork : NetworkBehaviour
         _netstate.Value = state;
     }
 
-
     private void ConsumeState() //to recieve the data sent from the server
     {
         _rigidBody.MovePosition(Vector3.SmoothDamp(transform.position, _netstate.Value.Pos, ref _vel, _interpolationSpeed));
         transform.rotation = Quaternion.Euler(0, Mathf.SmoothDampAngle(transform.rotation.eulerAngles.y, _netstate.Value.Rot.y, ref _rotVel, _interpolationSpeed),0);
     }
 
-
     struct PlayerNetworkData : INetworkSerializable //this is to speed up the data being sent over the internet to stop it being choppy and is supported by the networkserialize below
     {
         private float _X, _Z;
         private short _YRot; //short is used to send less bytes over the web although a small amount as a short is equal too 2 bytes
-
 
         internal Vector3 Pos //internal is used when the designer dont want to show the variable everywhere in public but it still allows access outside of the function in the code.
         {
@@ -106,7 +104,6 @@ public class PlayerNetwork : NetworkBehaviour
                 _Z = value.z;
             }
         }        
-        
         internal Vector3 Rot
         {
             get => new (0, _YRot, 0);
@@ -124,20 +121,5 @@ public class PlayerNetwork : NetworkBehaviour
             serializer.SerializeValue(ref _YRot);
         }
     }
+
 }
-
-
-/*
-private NetworkVariable<Quaternion> _netRot = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
-private NetworkVariable<Vector3> _netRot = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Owner);
-
-void update(){
-if(IsOwner){
-_netpos.value = transform.position;
-_netrot.value = transform.rotation;
-}}
-else{
-transform.position = _netpos.value;
-transform.rotation = _netRot.value;
-}
-*/

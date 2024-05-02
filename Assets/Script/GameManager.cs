@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
 {
@@ -13,6 +14,8 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnLocalPlayerReadyChanged;
     public event EventHandler OnPause; //using events to tell the rest of the players whats going on by openly giving out information to anyone listening ( checkout dms with mo for a good reference)
     public event EventHandler OnUnpause;
+    public event EventHandler OnReload;    
+    public event EventHandler OnUnreload;
 
     public Material testmat;
     private enum State
@@ -34,12 +37,14 @@ public class GameManager : NetworkBehaviour
     [SerializeField] private Canvas _kickcanvas;
     public TMP_Text _AmmoCount;
     public TMP_Text _healthCount;
-    //public TMP_Dropdown _KickList;
+
+    public Slider ReloadSlider;
 
     private void Awake()
     {
         Instance = this;
         _kickcanvas.gameObject.SetActive(false);
+        ReloadSlider.gameObject.SetActive(false);
         PlayerReadyDictionary = new Dictionary<ulong, bool>(); //use a dictionary to hold a large amount of different numbers of them, so infinite players (although i maxed it at 5)
         PlayerPauseDictionary = new Dictionary<ulong, bool>(); //use ulong as it then fits the clientid inside of it instead of using a string with can run out and do a 0x0004        
     }
@@ -61,8 +66,8 @@ public class GameManager : NetworkBehaviour
         {
             TogglePaused();
         }
-    }
 
+    }
     private void TogglePaused()
     {
         isLocalPlayerPaused = !isLocalPlayerPaused; //each time escape is pressed it jumps between these two
@@ -88,7 +93,7 @@ public class GameManager : NetworkBehaviour
     {
         PlayerPauseDictionary[rpcParams.Receive.SenderClientId] = true; //this calls to tell the server that it has paused the players that it has found
         TestGamePause();
-    }    
+    }
     [ServerRpc(RequireOwnership = false)]
     private void UnpauseGameServerRpc(ServerRpcParams rpcParams = default)
     {

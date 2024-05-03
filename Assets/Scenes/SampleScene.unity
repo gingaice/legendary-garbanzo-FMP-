@@ -674,19 +674,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 095d1c3d2764ad049afc37e9c3b02e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 963194227}
-  mouseSens: 300
-  playerBody: {fileID: 994086840}
-  controller: {fileID: 994086841}
-  PSpeed: 10
-  PJump: 3
-  gravity: -22.81
-  vel: {x: 0, y: 0, z: 0}
-  groundCheck: {fileID: 172644207}
-  groundDist: 0.4
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 16
+  _acceleration: 80
+  _maxVelocity: 10
+  _rotationSpeed: 450
 --- !u!1 &1404795119
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,6 +708,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500

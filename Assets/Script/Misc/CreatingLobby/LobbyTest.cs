@@ -85,26 +85,31 @@ public class LobbyTest : MonoBehaviour
         //NetworkManager.Singleton.ConnectedClients.Values = kickedPlayerId;
         try
         {
-            //foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
-            //{
-            //    if(clientId.ToString() == _KickList.value.ToString())
-            //    {
-            //        if(_connectedLobby.HostId.ToString() == _KickList.value.ToString()) break;
-            //        NetworkManager.Singleton.DisconnectClient(clientId);
-            //    }
-            //}
-
-            foreach (var item in NetworkManager.Singleton.ConnectedClientsList)
+            foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                if(item.PlayerObject.OwnerClientId.ToString() == _KickList.value.ToString())
+                if (clientId.ToString() == _KickList.value.ToString())
                 {
                     if (_connectedLobby.HostId.ToString() == _KickList.value.ToString()) break;
-                    NetworkObject player = item.PlayerObject;
-
-                    NetworkManager.Singleton.DisconnectClient(player.OwnerClientId);
-                    //KickedFromLobby();
+                    NetworkManager.Singleton.DisconnectClient(clientId);
                 }
             }
+
+            //foreach (var item in NetworkManager.Singleton.ConnectedClientsList)
+            //{
+            //    if (clientId.ToString() == _KickList.value.ToString())
+            //    {
+            //        if (_connectedLobby.HostId.ToString() == _KickList.value.ToString()) break;
+            //        NetworkManager.Singleton.DisconnectClient(clientId);
+            //    }
+            //    if (item.PlayerObject.OwnerClientId.ToString() == _KickList.value.ToString())
+            //    {
+            //        if (_connectedLobby.HostId.ToString() == _KickList.value.ToString()) break;
+            //        NetworkObject player = item.PlayerObject;
+
+            //        NetworkManager.Singleton.DisconnectClient(player.OwnerClientId);
+            //        //KickedFromLobby();
+            //    }
+            //}
             //_playerId = _KickList.value
 
             //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, kickedPlayerId);
@@ -302,15 +307,17 @@ public class LobbyTest : MonoBehaviour
                 //{
                 //    if (_connectedLobby == null) _buttons.SetActive(true);
                 //}
-                GameManager.Instance.restart();
-                await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
                 NetworkManager.Singleton.Shutdown();
+                await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
+                GameManager.Instance.restart();
+                //NetworkManager.Singleton.Shutdown();
             }
             else
             {
-                GameManager.Instance.restart();
                 NetworkManager.Singleton.Shutdown();
                 await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
+                GameManager.Instance.restart();
+                //NetworkManager.Singleton.Shutdown();
             }
            
             //if (_connectedLobby == null) _buttons.SetActive(true);

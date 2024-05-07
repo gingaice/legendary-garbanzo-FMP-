@@ -30,9 +30,6 @@ public class PlayerShoot : NetworkBehaviour
     private int health;
     private const int _maxHealth = 5;
 
-    private void Start()
-    {
-    }
     private void Update()
     {
         if(!IsOwner) return;

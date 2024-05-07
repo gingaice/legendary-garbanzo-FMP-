@@ -20,7 +20,6 @@ public class GameManager : NetworkBehaviour
     {
         waitingToStart,
         GamePlaying,
-        GameEnding,// current only states will need a end game state soon for a timer that will be synced and shared across the game space
     }
 
     private NetworkVariable<State> state = new NetworkVariable<State>(State.waitingToStart); //chooses the first state incase it tries to switch to a different one from load
@@ -166,10 +165,6 @@ public class GameManager : NetworkBehaviour
     public bool IsWaitingToStart()
     {
         return state.Value == State.waitingToStart;
-    }
-    public bool IsGameEnding()
-    {
-        return state.Value == State.GameEnding;
     }
     public bool IsLocalPlayerReady()
     {

@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: -5179389094857796292}
   - component: {fileID: 1438399015052326712}
   - component: {fileID: -6533306209209002407}
-  - component: {fileID: -2886024362899015350}
+  - component: {fileID: -7739519142992985307}
   m_Layer: 7
   m_Name: Player
   m_TagString: Objects
@@ -328,6 +328,7 @@ MonoBehaviour:
   ammo: 12
   bullet: {fileID: 7081826208824970008, guid: 60629a59a133ebb428a9c3ef31a58f13, type: 3}
   bulletSpawn: {fileID: 5833366810643743329}
+  CanShoot: 1
   health: 5
 --- !u!114 &-6533306209209002407
 MonoBehaviour:
@@ -343,7 +344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationSpeed: 0.1
   _serverAuth: 0
---- !u!114 &-2886024362899015350
+--- !u!114 &-7739519142992985307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -99,7 +99,9 @@ public class PlayerShoot : NetworkBehaviour
 
         //var delay = new WaitForSecondsRealtime(waitTimeSeconds);
         //GameManager.Instance.ReloadSlider.value = delay.waitTime;
+
         //yield return delay;
+        if (!IsOwner) yield break;
         float timer = waitTimeSeconds;
 
         while (timer > 0)

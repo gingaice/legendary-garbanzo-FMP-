@@ -302,23 +302,15 @@ public class LobbyTest : MonoBehaviour
             StopAllCoroutines();
             if (_connectedLobby.HostId == _playerId)
             {
-
-                //foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-                //{
-                //    if (_connectedLobby == null) _buttons.SetActive(true);
-                //}
                 await Lobbies.Instance.DeleteLobbyAsync(_connectedLobby.Id);
-                //await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId); //perhaps this will breka everything
                 NetworkManager.Singleton.Shutdown();
                 GameManager.Instance.restart();
-                //NetworkManager.Singleton.Shutdown();
             }
             else
             {
                 NetworkManager.Singleton.Shutdown();
                 await Lobbies.Instance.RemovePlayerAsync(_connectedLobby.Id, _playerId);
                 GameManager.Instance.restart();
-                //NetworkManager.Singleton.Shutdown();
             }
            
             //if (_connectedLobby == null) _buttons.SetActive(true);
